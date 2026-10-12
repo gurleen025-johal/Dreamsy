@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dreamsy 💜</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;color:#51476e;background:linear-gradient(135deg,#f1eaff,#e4f4ff,#fff0f7);min-height:100vh}
+header{text-align:center;padding:24px;background:#ffffffaa}
+h1{color:#987be0;font-size:38px;margin:8px}
+main{max-width:1000px;margin:auto;padding:24px 12px;text-align:center}
+input{width:90%;max-width:450px;padding:14px;border:1px solid #d9cafa;border-radius:25px;font-size:16px}
+button{margin:5px;padding:10px 15px;border:0;border-radius:20px;background:#e4d9ff;color:#51476e;cursor:pointer}
+button.active{background:#bba4f3;color:white}
+.gallery{columns:3 200px;column-gap:12px;margin-top:22px}
+.card{break-inside:avoid;margin-bottom:14px;padding:22px 10px;border-radius:20px;background:white;box-shadow:0 4px 15px #b9a6d833}
+.art{font-size:55px;padding:25px 0;background:linear-gradient(135deg,#eadfff,#dff3ff,#ffe6f2);border-radius:15px}
+.card h3{margin-bottom:5px}
+.card p{font-size:13px}
+footer{text-align:center;padding:25px}
+@media(max-width:450px){.gallery{columns:2 130px}}
+</style>
+</head>
+<body>
+<header>
+<h1>☁️ Dreamsy 🦋</h1>
+<div>D R E A M • D I S C O V E R • S H A R E</div>
+</header>
+<main>
+<h2>Welcome to your dreamy world ✨</h2>
+<p>Collect pretty little moments and discover new moods. 🎀</p>
+<input id="search" placeholder="🔎 Search your next little dream...">
+<div id="filters"></div>
+<div class="gallery" id="gallery"></div>
+<p id="empty" hidden>No dreams found. Try another search! 🌷</p>
+</main>
+<footer>Made with 💜 and a little bit of magic ✨</footer>
+<script>
+const dreams=[
+["Lavender Dreams","Aesthetic","💜","Soft colours, peaceful thoughts."],
+["Moonlight Magic","Wallpapers","🌙","Dream beneath the stars."],
+["Creative Corner","Art","🎨","Your imagination matters."],
+["Study Sparkle","Study Inspiration","📚","One page at a time."],
+["Butterfly Wishes","Cute Pictures","🦋","Let your dreams fly."],
+["Little Blossoms","Nature","🌸","Grow at your own pace."],
+["Anime Daydream","Anime","✨","A world of imagination."],
+["Gentle Reminder","Quotes","🎀","Small steps still count."]
+];
+const cats=["All","Aesthetic","Art","Study Inspiration","Wallpapers","Cute Pictures","Nature","Anime","Quotes"];
+let active="All";
+const filters=document.getElementById("filters");
+cats.forEach(c=>{
+ const b=document.createElement("button");
+ b.textContent=c;
+ if(c===active)b.className="active";
+ b.onclick=()=>{active=c;[...filters.children].forEach(x=>x.className=x.textContent===c?"active":"");render()};
+ filters.appendChild(b);
+});
+function render(){
+ const q=document.getElementById("search").value.toLowerCase();
+ const shown=dreams.filter(d=>(active==="All"||d[1]===active)&&d.join(" ").toLowerCase().includes(q));
+ document.getElementById("gallery").innerHTML=shown.map(d=>`<article class="card"><div class="art">${d[2]}</div><h3>${d[0]}</h3><p>${d[3]}</p><small>${d[1]}</small></article>`).join("");
+ document.getElementById("empty").hidden=shown.length>0;
+}
+document.getElementById("search").addEventListener("input",render);
+render();
+</script>
+</body>
+</html>
