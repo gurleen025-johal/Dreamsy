@@ -60,7 +60,7 @@ cats.forEach(c=>{
  b.onclick=()=>{active=c;[...filters.children].forEach(x=>x.className=x.textContent===c?"active":"");render()};
  filters.appendChild(b);
 });
-function openDream(index) {
+ function openDream(index) {
   const d = dreams[index];
   if (!d) return;
 
@@ -87,11 +87,11 @@ function openDream(index) {
   document.getElementById("dream-close").onclick =
     () => modal.remove();
 
-  modal.onclick = e => {
+    modal.onclick = e => {
     if (e.target === modal) modal.remove();
   };
 }
-
+window.openDream = openDream;
 function render(){
  const q=document.getElementById("search").value.toLowerCase();
  const shown=dreams.filter(d=>(active==="All"||d[1]===active)&&d.join(" ").toLowerCase().includes(q));
