@@ -55,5 +55,31 @@
     <p id="status" role="status">Please log in to manage Dreamsy.</p>
     <p class="note">Owner access only 💜</p>
   </div>
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  const supabase = createClient(
+    'https://feeqhbrpjghgxkjurpfg.supabase.co',
+    'sb_publishable_ep5Ucf0rziABtsh9ulyJKQ_hZ9zbV41'
+  );
+  const status = document.getElementById('status');
+  document.getElementById('loginBtn').addEventListener('click', async () => {
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    status.textContent = 'Logging in...';
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+    status.textContent = error
+      ? 'Login failed: ' + error.message
+      : 'Login successful! Welcome to Dreamsy 💜';
+  });
+  document.getElementById('logoutBtn').addEventListener('click', async () => {
+    const { error } = await supabase.auth.signOut();
+    status.textContent = error
+      ? 'Logout failed: ' + error.message
+      : 'You are logged out.';
+  });
+</script>
 </body>
 </html>
