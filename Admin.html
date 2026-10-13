@@ -70,7 +70,29 @@
         <h3>🖼️ Manage Pictures</h3>
         <p>Upload and manage pictures on Dreamsy.</p>
         <button id="managePicturesBtn">Manage Pictures</button>
-      </div>
+     
+        
+<div id="pictureManager" hidden>
+  <hr>
+  <h2>🖼️ Upload a New Picture</h2>
+
+  <label for="pictureFile">Choose a picture:</label>
+  <input id="pictureFile" type="file" accept="image/*">
+
+  <label for="pictureTitle">Picture title:</label>
+  <input id="pictureTitle" type="text" placeholder="Enter picture title">
+
+  <label for="pictureCategory">Category:</label>
+  <input id="pictureCategory" type="text" placeholder="e.g. Anime, Nature, Aesthetic">
+
+  <label for="pictureDescription">Description:</label>
+  <input id="pictureDescription" type="text" placeholder="Write a short description">
+
+  <button id="uploadPictureBtn">⬆️ Upload Picture</button>
+  <p id="uploadStatus" role="status"></p>
+</div>
+
+        </div>
 
       <div style="background:#f5f0ff;padding:15px;border-radius:15px;margin:12px 0">
         <h3>🌷 Website</h3>
@@ -126,9 +148,9 @@
       window.location.href = './index.html';
     });
 
-    document.getElementById('managePicturesBtn').addEventListener('click', () => {
-      status.textContent = 'Picture management is the next feature we will add! 🌷';
-    });
+  document.getElementById('managePicturesBtn').addEventListener('click', () => {
+  document.getElementById('pictureManager').hidden = false;
+});
   </script>
 </body>
 </html>
