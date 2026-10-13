@@ -6,6 +6,7 @@
   <title>Dreamsy Admin Panel</title>
   <style>
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       padding: 24px;
@@ -13,6 +14,7 @@
       background: #f5f0ff;
       color: #35264d;
     }
+
     .panel {
       max-width: 600px;
       margin: 35px auto;
@@ -21,7 +23,9 @@
       border-radius: 22px;
       box-shadow: 0 8px 25px #d8c9ed;
     }
+
     h1 { color: #8056b3; }
+
     input, button {
       width: 100%;
       padding: 13px;
@@ -29,7 +33,9 @@
       border-radius: 12px;
       font-size: 16px;
     }
+
     input { border: 1px solid #d8c9ed; }
+
     button {
       border: 0;
       background: #9568c9;
@@ -37,6 +43,7 @@
       font-weight: bold;
       cursor: pointer;
     }
+
     .note { color: #78698a; font-size: 14px; }
   </style>
 </head>
@@ -54,32 +61,74 @@
 
     <p id="status" role="status">Please log in to manage Dreamsy.</p>
     <p class="note">Owner access only 💜</p>
+
+    <div id="dashboard" hidden>
+      <hr>
+      <h2>✨ Your Dashboard</h2>
+
+      <div style="background:#f5f0ff;padding:15px;border-radius:15px;margin:12px 0">
+        <h3>🖼️ Manage Pictures</h3>
+        <p>Upload and manage pictures on Dreamsy.</p>
+        <button id="managePicturesBtn">Manage Pictures</button>
+      </div>
+
+      <div style="background:#f5f0ff;padding:15px;border-radius:15px;margin:12px 0">
+        <h3>🌷 Website</h3>
+        <p>Visit your public Dreamsy gallery.</p>
+        <button id="visitWebsiteBtn">Open Dreamsy Website</button>
+      </div>
+    </div>
   </div>
-<script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  const supabase = createClient(
-    'https://feeqhbrpjghgxkjurpfg.supabase.co',
-    'sb_publishable_ep5Ucf0rziABtsh9ulyJKQ_hZ9zbV41'
-  );
-  const status = document.getElementById('status');
-  document.getElementById('loginBtn').addEventListener('click', async () => {
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
-    status.textContent = 'Logging in...';
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password
+
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+    const supabase = createClient(
+      'https://feeqhbrpjghgxkjurpfg.supabase.co',
+      'sb_publishable_ep5Ucf0rziABtsh9ulyJKQ_hZ9zbV41'
+    );
+
+    const status = document.getElementById('status');
+    const dashboard = document.getElementById('dashboard');
+
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      status.textContent = 'Logging in...';
+
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) {
+        status.textContent = 'Login failed: ' + error.message;
+        dashboard.hidden = true;
+      } else {
+        status.textContent = 'Login successful! Welcome to Dreamsy 💜';
+        dashboard.hidden = false;
+      }
     });
-    status.textContent = error
-      ? 'Login failed: ' + error.message
-      : 'Login successful! Welcome to Dreamsy 💜';
-  });
-  document.getElementById('logoutBtn').addEventListener('click', async () => {
-    const { error } = await supabase.auth.signOut();
-    status.textContent = error
-      ? 'Logout failed: ' + error.message
-      : 'You are logged out.';
-  });
-</script>
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      const { error } = await supabase.auth.signOut();
+
+      if (error) {
+        status.textContent = 'Logout failed: ' + error.message;
+      } else {
+        status.textContent = 'You are logged out.';
+        dashboard.hidden = true;
+      }
+    });
+
+    document.getElementById('visitWebsiteBtn').addEventListener('click', () => {
+      window.location.href = './index.html';
+    });
+
+    document.getElementById('managePicturesBtn').addEventListener('click', () => {
+      status.textContent = 'Picture management is the next feature we will add! 🌷';
+    });
+  </script>
 </body>
 </html>
