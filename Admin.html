@@ -1,1 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dreamsy Admin Panel</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: Arial, sans-serif;
+      background: #f5f0ff;
+      color: #35264d;
+    }
+    .panel {
+      max-width: 600px;
+      margin: 35px auto;
+      padding: 25px;
+      background: white;
+      border-radius: 22px;
+      box-shadow: 0 8px 25px #d8c9ed;
+    }
+    h1 { color: #8056b3; }
+    input, button {
+      width: 100%;
+      padding: 13px;
+      margin: 8px 0;
+      border-radius: 12px;
+      font-size: 16px;
+    }
+    input { border: 1px solid #d8c9ed; }
+    button {
+      border: 0;
+      background: #9568c9;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .note { color: #78698a; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="panel">
+    <h1>🌙 Dreamsy Admin</h1>
+    <p>Welcome to your magical picture studio! ✨</p>
 
+    <h2>🔐 Owner Login</h2>
+    <input id="email" type="email" placeholder="Owner email">
+    <input id="password" type="password" placeholder="Password">
+
+    <button id="loginBtn">Log In</button>
+    <button id="logoutBtn">Log Out</button>
+
+    <p id="status" role="status">Please log in to manage Dreamsy.</p>
+    <p class="note">Owner access only 💜</p>
+  </div>
+</body>
+</html>
