@@ -60,11 +60,45 @@ cats.forEach(c=>{
  b.onclick=()=>{active=c;[...filters.children].forEach(x=>x.className=x.textContent===c?"active":"");render()};
  filters.appendChild(b);
 });
+function openDream(index) {
+  const d = dreams[index];
+  if (!d) return;
+
+  const old = document.getElementById("dream-modal");
+  if (old) old.remove();
+
+  const modal = document.createElement("div");
+  modal.id = "dream-modal";
+  modal.style.cssText =
+    "position:fixed;inset:0;background:#171329dd;z-index:9999;display:flex;align-items:center;justify-content:center;padding:18px;overflow:auto";
+
+  modal.innerHTML = `
+    <div style="background:#fff7ff;color:#332544;padding:20px;border-radius:20px;max-width:420px;width:100%;text-align:center">
+      <button id="dream-close" style="float:right;font-size:20px">✖</button>
+      <img src="${d[2]}" alt="${d[0]}" style="width:100%;max-height:300px;object-fit:contain;border-radius:14px">
+      <h2>${d[0]}</h2>
+      <p>${d[3]}</p>
+      <p>Category: ${d[1]}</p>
+      <a href="${d[2]}" download style="display:inline-block;background:#b69bdf;color:#fff;padding:12px 20px;border-radius:12px;text-decoration:none">⬇️ Download Picture</a>
+    </div>`;
+
+  document.body.appendChild(modal);
+
+  document.getElementById("dream-close").onclick =
+    () => modal.remove();
+
+  modal.onclick = e => {
+    if (e.target === modal) modal.remove();
+  };
+}
+
 function render(){
  const q=document.getElementById("search").value.toLowerCase();
  const shown=dreams.filter(d=>(active==="All"||d[1]===active)&&d.join(" ").toLowerCase().includes(q));
  
-document.getElementById("gallery").innerHTML=shown.map(d=>`<article class="card"><img src="${d[2]}" alt="${d[0]}" style="width:100%;height:180px;object-fit:cover;border-radius:15px"><h3>${d[0]}</h3><p>${d[3]}</p><small>${d[1]}</small></article>`).join("");
+
+document.getElementById("gallery").innerHTML=shown.map(d=>`<article class="card" onclick="openDream(${dreams.indexOf(d)})" style="cursor:pointer"><img src="${d[2]}" alt="${d[0]}" style="width:100%;height:180px;object-fit:cover;border-radius:15px"><h3>${d[0]}</h3><p>${d[3]}</p><small>${d[1]}</small></article>`).join("");
+
  document.getElementById("empty").hidden=shown.length>0;
 }
 document.getElementById("search").addEventListener("input",render);
@@ -75,7 +109,7 @@ render();
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
   const supabase = createClient(
-    'https://feeqhbrpjghgxkjurpfg.supabase.co/rest/v1/',
+    'https://feeqhbrpjghgxkjurpfg.supabase.co',
     'sb_publishable_ep5Ucf0rziABtsh9ulyJKQ_hZ9zbV41',
   );
 
