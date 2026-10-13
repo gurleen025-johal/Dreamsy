@@ -35,6 +35,21 @@ footer{text-align:center;padding:25px}
 <div id="filters"></div>
 <div class="gallery" id="gallery"></div>
 <p id="empty" hidden>No dreams found. Try another search! 🌷</p>
+<div style="background:white;padding:20px;margin:20px auto;border-radius:20px;max-width:450px">
+  <h2>🔐 Dreamsy Owner Login</h2>
+  <input id="ownerEmail" type="email" placeholder="Your email">
+  <input id="ownerPassword" type="password" placeholder="Your password">
+  <button onclick="ownerSignUp()">Create Owner Account</button>
+  <button onclick="ownerLogin()">Log In</button>
+  <button onclick="ownerLogout()">Log Out</button>
+  <hr>
+  <h2>☁️ Share Your Dream</h2>
+  <input id="picTitle" type="text" placeholder="Picture title">
+  <input id="picCategory" type="text" placeholder="Category">
+  <input id="picFile" type="file" accept="image/*">
+  <button onclick="uploadDream()">⬆️ Upload Picture</button>
+  <p id="uploadStatus"></p>
+</div>
 </main>
 <footer>Made with 💜 and a little bit of magic ✨</footer>
 <script>
