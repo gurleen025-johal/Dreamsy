@@ -1,156 +1,333 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dreamsy Admin Panel</title>
-  <style>
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      padding: 24px;
-      font-family: Arial, sans-serif;
-      background: #f5f0ff;
-      color: #35264d;
-    }
-
-    .panel {
-      max-width: 600px;
-      margin: 35px auto;
-      padding: 25px;
-      background: white;
-      border-radius: 22px;
-      box-shadow: 0 8px 25px #d8c9ed;
-    }
-
-    h1 { color: #8056b3; }
-
-    input, button {
-      width: 100%;
-      padding: 13px;
-      margin: 8px 0;
-      border-radius: 12px;
-      font-size: 16px;
-    }
-
-    input { border: 1px solid #d8c9ed; }
-
-    button {
-      border: 0;
-      background: #9568c9;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .note { color: #78698a; font-size: 14px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dreamsy Owner Studio 💜</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:16px;font-family:Arial,sans-serif;color:#493466;background:linear-gradient(145deg,#f7f0ff,#e4f4ff,#fff4fa)}
+.wrap{max-width:720px;margin:24px auto}
+header{text-align:center;margin-bottom:22px}
+.moon{font-size:42px}
+h1{color:#8864bd;margin:8px}
+.panel{background:white;border:1px solid #e2d7f3;border-radius:20px;padding:20px;margin-bottom:18px;box-shadow:0 8px 25px #bba7df24}
+label{display:block;font-size:14px;font-weight:bold;margin:14px 0 7px}
+input,textarea,button{width:100%;padding:13px;border-radius:12px;font:inherit}
+input,textarea{border:1px solid #e2d7f3;background:white;color:#493466}
+textarea{resize:vertical;min-height:80px}
+button{border:0;cursor:pointer;font-weight:bold;margin-top:12px}
+.primary{background:#8864bd;color:white}
+.secondary{background:#e0f3ff;color:#315d82}
+.status,.muted{font-size:14px;line-height:1.6;overflow-wrap:anywhere}
+.muted{color:#786d89}
+.preview{width:100%;max-height:300px;object-fit:contain;background:#eee6ff;border-radius:14px;margin-top:12px}
+.list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.item{border:1px solid #e2d7f3;border-radius:14px;overflow:hidden}
+.item img{width:100%;height:160px;object-fit:cover;display:block}
+.item-body{padding:12px}
+.item h3{margin:0 0 6px;overflow-wrap:anywhere}
+.item p{font-size:13px;overflow-wrap:anywhere;color:#786d89}
+[hidden]{display:none!important}
+@media(max-width:450px){.panel{padding:15px}.item img{height:125px}}
+</style>
 </head>
 <body>
-  <div class="panel">
-    <h1>🌙 Dreamsy Admin</h1>
-    <p>Welcome to your magical picture studio! ✨</p>
+<div class="wrap">
+<header>
+<div class="moon">🌙</div>
+<h1>Dreamsy Studio</h1>
+<p class="muted">Your magical picture studio ✨</p>
+</header>
 
-    <h2>🔐 Owner Login</h2>
-    <input id="email" type="email" placeholder="Owner email">
-    <input id="password" type="password" placeholder="Password">
+<section class="panel" id="loginPanel">
+<h2>🔐 Owner Login</h2>
+<p class="muted">Sign in with your existing owner account.</p>
+<form id="loginForm">
+<label for="email">Owner email</label>
+<input id="email" type="email" autocomplete="username" required>
+<label for="password">Password</label>
+<input id="password" type="password" autocomplete="current-password" required>
+<button class="primary" id="loginButton" type="submit">Log In 💜</button>
+</form>
+<p id="loginStatus" class="status" role="status"></p>
+</section>
 
-    <button id="loginBtn">Log In</button>
-    <button id="logoutBtn">Log Out</button>
+<div id="dashboard" hidden>
+<section class="panel">
+<h2>✨ Your Studio</h2>
+<p id="ownerInfo" class="muted"></p>
+<button class="secondary" id="refreshButton" type="button">↻ Refresh Pictures</button>
+<button class="secondary" id="logoutButton" type="button">Log Out</button>
+<p id="pageStatus" class="status" role="status"></p>
+</section>
 
-    <p id="status" role="status">Please log in to manage Dreamsy.</p>
-    <p class="note">Owner access only 💜</p>
+<section class="panel">
+<h2>🖼️ Upload a Picture</h2>
+<form id="uploadForm">
+<label for="pictureFile">Choose a picture</label>
+<input id="pictureFile" type="file" accept="image/*" required>
+<img id="preview" class="preview" alt="Picture preview" hidden>
+<label for="pictureTitle">Picture title</label>
+<input id="pictureTitle" maxlength="120" required placeholder="e.g. Moonlight Dreams">
+<label for="pictureCategory">Category</label>
+<input id="pictureCategory" maxlength="60" required placeholder="e.g. Anime, Nature, Aesthetic">
+<label for="pictureDescription">Description (optional)</label>
+<textarea id="pictureDescription" maxlength="1000" placeholder="Write a description"></textarea>
+<button class="primary" id="uploadButton" type="submit">⬆️ Upload Picture</button>
+</form>
+<p class="muted">Images up to 10 MB.</p>
+<p id="uploadStatus" class="status" role="status" aria-live="polite"></p>
+</section>
 
-    <div id="dashboard" hidden>
-      <hr>
-      <h2>✨ Your Dashboard</h2>
-
-      <div style="background:#f5f0ff;padding:15px;border-radius:15px;margin:12px 0">
-        <h3>🖼️ Manage Pictures</h3>
-        <p>Upload and manage pictures on Dreamsy.</p>
-        <button id="managePicturesBtn">Manage Pictures</button>
-     
-        
-<div id="pictureManager" hidden>
-  <hr>
-  <h2>🖼️ Upload a New Picture</h2>
-
-  <label for="pictureFile">Choose a picture:</label>
-  <input id="pictureFile" type="file" accept="image/*">
-
-  <label for="pictureTitle">Picture title:</label>
-  <input id="pictureTitle" type="text" placeholder="Enter picture title">
-
-  <label for="pictureCategory">Category:</label>
-  <input id="pictureCategory" type="text" placeholder="e.g. Anime, Nature, Aesthetic">
-
-  <label for="pictureDescription">Description:</label>
-  <input id="pictureDescription" type="text" placeholder="Write a short description">
-
-  <button id="uploadPictureBtn">⬆️ Upload Picture</button>
-  <p id="uploadStatus" role="status"></p>
+<section class="panel">
+<h2>🌷 Your Uploaded Pictures</h2>
+<div id="pictureList" class="list"></div>
+<p id="listStatus" class="status" role="status"></p>
+</section>
+</div>
 </div>
 
-        </div>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-      <div style="background:#f5f0ff;padding:15px;border-radius:15px;margin:12px 0">
-        <h3>🌷 Website</h3>
-        <p>Visit your public Dreamsy gallery.</p>
-        <button id="visitWebsiteBtn">Open Dreamsy Website</button>
-      </div>
-    </div>
-  </div>
+const supabase = createClient(
+  'https://feeqhbrpjghgxkjurpfg.supabase.co',
+  'sb_publishable_ep5Ucf0rziABtsh9ulyJKQ_hZ9zbV41'
+);
+const BUCKET = 'dreamsy-pictures';
+const $ = id => document.getElementById(id);
+let currentUser = null;
+let previewUrl = null;
 
-  <script type="module">
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+function status(id, message, error = false) {
+  $(id).textContent = message;
+  $(id).style.color = error ? '#b42358' : '#55764c';
+}
 
-    const supabase = createClient(
-      'https://feeqhbrpjghgxkjurpfg.supabase.co',
-      'sb_publishable_ep5Ucf0rziABtsh9ulyJKQ_hZ9zbV41'
-    );
+function safeFileName(name) {
+  return name.normalize('NFKD')
+    .replace(/[^a-zA-Z0-9._-]/g, '_')
+    .slice(-100) || 'picture';
+}
 
-    const status = document.getElementById('status');
-    const dashboard = document.getElementById('dashboard');
+function showDashboard(user) {
+  currentUser = user;
+  $('loginPanel').hidden = true;
+  $('dashboard').hidden = false;
+  $('ownerInfo').textContent = 'Signed in as ' + (user.email || 'owner');
+  loadPictures();
+}
 
-    document.getElementById('loginBtn').addEventListener('click', async () => {
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
+function showLogin() {
+  currentUser = null;
+  $('loginPanel').hidden = false;
+  $('dashboard').hidden = true;
+}
 
-      status.textContent = 'Logging in...';
+$('loginForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  const button = $('loginButton');
+  button.disabled = true;
+  status('loginStatus', 'Logging in...');
 
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
-
-      if (error) {
-        status.textContent = 'Login failed: ' + error.message;
-        dashboard.hidden = true;
-      } else {
-        status.textContent = 'Login successful! Welcome to Dreamsy 💜';
-        dashboard.hidden = false;
-      }
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: $('email').value.trim(),
+      password: $('password').value
     });
-
-    document.getElementById('logoutBtn').addEventListener('click', async () => {
-      const { error } = await supabase.auth.signOut();
-
-      if (error) {
-        status.textContent = 'Logout failed: ' + error.message;
-      } else {
-        status.textContent = 'You are logged out.';
-        dashboard.hidden = true;
-      }
-    });
-
-    document.getElementById('visitWebsiteBtn').addEventListener('click', () => {
-      window.location.href = './index.html';
-    });
-
-  document.getElementById('managePicturesBtn').addEventListener('click', () => {
-  document.getElementById('pictureManager').hidden = false;
+    if (error) throw error;
+    status('loginStatus', 'Login successful! 💜');
+    showDashboard(data.user);
+  } catch (error) {
+    status('loginStatus', 'Login failed: ' + error.message, true);
+  } finally {
+    button.disabled = false;
+  }
 });
-  </script>
+
+$('logoutButton').addEventListener('click', async () => {
+  const button = $('logoutButton');
+  button.disabled = true;
+  try {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+    showLogin();
+    status('loginStatus', 'You have logged out.');
+  } catch (error) {
+    status('pageStatus', 'Logout failed: ' + error.message, true);
+  } finally {
+    button.disabled = false;
+  }
+});
+
+$('pictureFile').addEventListener('change', () => {
+  const file = $('pictureFile').files[0];
+  $('preview').hidden = true;
+  if (previewUrl) URL.revokeObjectURL(previewUrl);
+  previewUrl = null;
+
+  if (!file) return;
+  if (!file.type.startsWith('image/') || file.size > 10 * 1024 * 1024) {
+    $('pictureFile').value = '';
+    status('uploadStatus', 'Choose an image no larger than 10 MB.', true);
+    return;
+  }
+
+  previewUrl = URL.createObjectURL(file);
+  $('preview').src = previewUrl;
+  $('preview').hidden = false;
+  status('uploadStatus', 'Image ready! ✨');
+});
+
+$('uploadForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  if (!currentUser) {
+    status('uploadStatus', 'Please log in again.', true);
+    return;
+  }
+
+  const file = $('pictureFile').files[0];
+  const title = $('pictureTitle').value.trim();
+  const category = $('pictureCategory').value.trim();
+  const description = $('pictureDescription').value.trim();
+
+  if (!file || !title || !category) {
+    status('uploadStatus', 'Choose an image and enter a title and category.', true);
+    return;
+  }
+  if (!file.type.startsWith('image/') || file.size > 10 * 1024 * 1024) {
+    status('uploadStatus', 'Choose an image no larger than 10 MB.', true);
+    return;
+  }
+
+  const button = $('uploadButton');
+  button.disabled = true;
+  status('uploadStatus', 'Uploading your picture...');
+
+  let path = null;
+  let storageUploaded = false;
+
+  try {
+    path = `${currentUser.id}/${Date.now()}-${safeFileName(file.name)}`;
+
+    const { error: storageError } = await supabase.storage
+      .from(BUCKET)
+      .upload(path, file, {
+        upsert: false,
+        contentType: file.type,
+        cacheControl: '3600'
+      });
+    if (storageError) throw storageError;
+    storageUploaded = true;
+
+    const { error: dbError } = await supabase
+      .from('dreamsy_pictures')
+      .insert({
+        title,
+        category,
+        description,
+        file_path: path,
+        uploaded_by: currentUser.id
+      });
+    if (dbError) throw dbError;
+
+    $('uploadForm').reset();
+    $('preview').hidden = true;
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    previewUrl = null;
+    status('uploadStatus', 'Picture uploaded successfully! 🌙💜');
+    await loadPictures();
+  } catch (error) {
+    if (storageUploaded && path) {
+      const { error: cleanupError } = await supabase.storage
+        .from(BUCKET).remove([path]);
+      if (cleanupError) {
+        status('uploadStatus',
+          'Upload failed: ' + error.message +
+          '. Cleanup also failed: ' + cleanupError.message, true);
+      } else {
+        status('uploadStatus', 'Upload failed: ' + error.message, true);
+      }
+    } else {
+      status('uploadStatus', 'Upload failed: ' + error.message, true);
+    }
+  } finally {
+    button.disabled = false;
+  }
+});
+
+async function loadPictures() {
+  if (!currentUser) return;
+  const list = $('pictureList');
+  list.replaceChildren();
+  status('listStatus', 'Loading pictures...');
+
+  try {
+    const { data, error } = await supabase
+      .from('dreamsy_pictures')
+      .select('id,title,category,description,file_path,created_at')
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      status('listStatus', 'No pictures yet. Upload your first one! 💜');
+      return;
+    }
+
+    let displayed = 0;
+    for (const picture of data) {
+      const { data: signed, error: signedError } = await supabase.storage
+        .from(BUCKET).createSignedUrl(picture.file_path, 3600);
+      if (signedError || !signed?.signedUrl) continue;
+
+      const card = document.createElement('article');
+      card.className = 'item';
+      const image = document.createElement('img');
+      image.src = signed.signedUrl;
+      image.alt = picture.title || 'Uploaded picture';
+      image.loading = 'lazy';
+
+      const body = document.createElement('div');
+      body.className = 'item-body';
+      const heading = document.createElement('h3');
+      heading.textContent = picture.title || 'Untitled';
+      const cat = document.createElement('p');
+      cat.textContent = 'Category: ' + (picture.category || 'Uncategorised');
+      const desc = document.createElement('p');
+      desc.textContent = picture.description || '';
+
+      body.append(heading, cat, desc);
+      card.append(image, body);
+      list.append(card);
+      displayed++;
+    }
+
+    status('listStatus', displayed
+      ? `Showing ${displayed} picture(s). 💜`
+      : 'Pictures were found, but signed URLs failed. Check Storage permissions.',
+      displayed === 0);
+  } catch (error) {
+    status('listStatus', 'Could not load pictures: ' + error.message, true);
+  }
+}
+
+$('refreshButton').addEventListener('click', loadPictures);
+
+async function checkSession() {
+  try {
+    const { data, error } = await supabase.auth.getSession();
+    if (error) throw error;
+    if (data.session?.user) showDashboard(data.session.user);
+    else showLogin();
+  } catch (error) {
+    showLogin();
+    status('loginStatus', 'Session check failed: ' + error.message, true);
+  }
+}
+
+checkSession();
+</script>
 </body>
 </html>
