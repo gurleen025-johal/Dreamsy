@@ -3,134 +3,762 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dreamsy 💜</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#eee6ff">
+<meta name="description" content="Dreamsy — a dreamy little world of art, pictures and inspiration.">
+<title>Dreamsy 🌙 | A World of Dreams</title>
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;color:#51476e;background:linear-gradient(135deg,#f1eaff,#e4f4ff,#fff0f7);min-height:100vh}
-header{text-align:center;padding:24px;background:#ffffffaa}
-h1{color:#987be0;font-size:38px;margin:8px}
-main{max-width:1000px;margin:auto;padding:24px 12px;text-align:center}
-input{width:90%;max-width:450px;padding:14px;border:1px solid #d9cafa;border-radius:25px;font-size:16px}
-button{margin:5px;padding:10px 15px;border:0;border-radius:20px;background:#e4d9ff;color:#51476e;cursor:pointer}
-button.active{background:#bba4f3;color:white}
-.gallery{columns:3 200px;column-gap:12px;margin-top:22px}
-.card{break-inside:avoid;margin-bottom:14px;padding:22px 10px;border-radius:20px;background:white;box-shadow:0 4px 15px #b9a6d833}
-.art{font-size:55px;padding:25px 0;background:linear-gradient(135deg,#eadfff,#dff3ff,#ffe6f2);border-radius:15px}
-.card h3{margin-bottom:5px}
-.card p{font-size:13px}
-footer{text-align:center;padding:25px}
-@media(max-width:450px){.gallery{columns:2 130px}}
+:root {
+  --lavender: #e9ddff;
+  --purple: #8056b3;
+  --deep-purple: #493366;
+  --sky: #dff3ff;
+  --blue: #5a9acb;
+  --white: #ffffff;
+  --text: #403450;
+  --muted: #796d89;
+  --border: #e5d9f4;
+  --shadow: 0 8px 28px rgba(100, 70, 145, .12);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(160deg, #faf7ff, #edf8ff 65%, #f8f3ff);
+  color: var(--text);
+}
+button, input, textarea, select { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, input:focus-visible,
+textarea:focus-visible, select:focus-visible {
+  outline: 3px solid #a58add;
+  outline-offset: 3px;
+}
+header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+}
+.nav {
+  max-width: 1150px;
+  margin: auto;
+  padding: 14px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.logo {
+  font-size: 27px;
+  font-weight: 850;
+  color: var(--purple);
+  text-decoration: none;
+  letter-spacing: -.8px;
+}
+nav { display: flex; gap: 18px; flex-wrap: wrap; }
+nav a { color: var(--deep-purple); text-decoration: none; font-size: 14px; }
+nav a:hover { color: var(--blue); }
+.hero {
+  text-align: center;
+  padding: 76px 20px 65px;
+  background:
+    radial-gradient(ellipse at 15% 20%, #e4d7ff 0, transparent 42%),
+    radial-gradient(ellipse at 85% 15%, #d6efff 0, transparent 42%),
+    linear-gradient(135deg, #faf6ff, #f0f9ff);
+}
+.eyebrow {
+  display: inline-block;
+  padding: 8px 15px;
+  border-radius: 30px;
+  background: white;
+  color: var(--purple);
+  font-size: 13px;
+  box-shadow: var(--shadow);
+}
+.hero h1 {
+  font-size: clamp(42px, 8vw, 76px);
+  line-height: 1.08;
+  margin: 20px 0 15px;
+  color: var(--deep-purple);
+  letter-spacing: -2px;
+}
+.hero h1 span { color: var(--purple); }
+.hero p {
+  max-width: 570px;
+  margin: 0 auto 25px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+.primary, .secondary, .small-btn {
+  border: 0;
+  border-radius: 13px;
+  padding: 12px 18px;
+  font-weight: 700;
+  transition: transform .15s, opacity .15s;
+}
+.primary { background: var(--purple); color: white; }
+.secondary { background: var(--sky); color: #315d82; }
+.small-btn { padding: 9px 12px; background: #f1e9ff; color: var(--deep-purple); }
+.primary:hover, .secondary:hover, .small-btn:hover { transform: translateY(-1px); }
+.container { max-width: 1150px; padding: 0 22px; margin: auto; }
+section { padding: 55px 0; }
+.section-head { text-align: center; margin-bottom: 27px; }
+.section-head h2 { font-size: clamp(27px, 5vw, 38px); margin: 0 0 10px; color: var(--deep-purple); }
+.section-head p { color: var(--muted); margin: 0; line-height: 1.6; }
+.tools {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(150px, 220px);
+  gap: 12px;
+  margin: 25px 0 18px;
+}
+.field {
+  width: 100%;
+  padding: 13px 15px;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: white;
+  color: var(--text);
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 9px;
+  margin: 18px 0 25px;
+}
+.chip {
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  padding: 9px 14px;
+  background: white;
+  color: var(--deep-purple);
+}
+.chip.active { background: var(--purple); color: white; border-color: var(--purple); }
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+.picture-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: white;
+  border-radius: 19px;
+  box-shadow: var(--shadow);
+}
+.picture-card img {
+  width: 100%;
+  aspect-ratio: 4 / 4.5;
+  display: block;
+  object-fit: cover;
+  background: linear-gradient(135deg, var(--lavender), var(--sky));
+  cursor: zoom-in;
+}
+.card-content { padding: 15px; }
+.card-content h3 { margin: 0 0 6px; font-size: 18px; overflow-wrap: anywhere; }
+.card-content p { margin: 0 0 12px; color: var(--muted); font-size: 14px; line-height: 1.6; overflow-wrap: anywhere; }
+.card-meta { color: var(--purple); font-size: 12px; margin-bottom: 10px; }
+.card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.card-actions button { flex: 1; }
+.status {
+  text-align: center;
+  color: var(--muted);
+  padding: 25px 12px;
+  line-height: 1.7;
+}
+.form-card {
+  max-width: 650px;
+  margin: auto;
+  background: rgba(255,255,255,.9);
+  border: 1px solid var(--border);
+  border-radius: 23px;
+  padding: clamp(18px, 4vw, 30px);
+  box-shadow: var(--shadow);
+}
+.form-card label { display: block; font-size: 14px; font-weight: 700; margin: 14px 0 7px; }
+.form-card textarea { min-height: 115px; resize: vertical; }
+.form-card button { margin-top: 14px; }
+.form-note { font-size: 12px; color: var(--muted); line-height: 1.6; }
+#formStatus, #commentStatus { min-height: 24px; color: var(--purple); font-size: 14px; }
+#favouritesSection { background: rgba(229,241,255,.5); }
+footer {
+  text-align: center;
+  padding: 30px 20px;
+  background: white;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 13px;
+}
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: rgba(30,20,45,.65);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  overflow-y: auto;
+}
+.modal.open { display: flex; }
+.modal-box {
+  width: min(680px, 100%);
+  max-height: 92vh;
+  overflow-y: auto;
+  background: white;
+  border-radius: 20px;
+  padding: 18px;
+}
+.modal-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.modal-top h2 { font-size: 21px; margin: 5px 0 15px; }
+.close-btn { border: 0; background: var(--lavender); color: var(--deep-purple); border-radius: 10px; padding: 9px 13px; }
+#largePicture { width: 100%; max-height: 55vh; object-fit: contain; border-radius: 12px; background: #f5f0ff; }
+.comment-list { display: grid; gap: 10px; margin-top: 15px; }
+.comment {
+  background: #f8f4ff;
+  border-radius: 12px;
+  padding: 12px;
+  overflow-wrap: anywhere;
+}
+.comment strong { color: var(--deep-purple); }
+.comment p { margin: 6px 0 0; line-height: 1.5; white-space: pre-wrap; }
+[hidden] { display: none !important; }
+@media (max-width: 760px) {
+  .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .nav { padding: 12px 15px; }
+  nav { gap: 11px; }
+  nav a { font-size: 12px; }
+  .container { padding: 0 15px; }
+  section { padding: 42px 0; }
+}
+@media (max-width: 430px) {
+  .logo { font-size: 23px; }
+  nav { gap: 8px; }
+  .gallery { gap: 9px; }
+  .card-content { padding: 11px; }
+  .card-content h3 { font-size: 16px; }
+  .card-actions { flex-direction: column; }
+  .tools { grid-template-columns: 1fr; }
+}
 </style>
 </head>
+
 <body>
 <header>
-<h1>☁️ Dreamsy 🦋</h1>
-<div>D R E A M • D I S C O V E R • S H A R E</div>
+  <div class="nav">
+    <a class="logo" href="#home">🌙 Dreamsy</a>
+    <nav aria-label="Main navigation">
+      <a href="#gallerySection">Gallery</a>
+      <a href="#favouritesSection">Favourites</a>
+      <a href="#feedbackSection">Feedback</a>
+    </nav>
+  </div>
 </header>
+
 <main>
-<h2>Welcome to your dreamy world ✨</h2>
-<p>Collect pretty little moments and discover new moods. 🎀</p>
-<input id="search" placeholder="🔎 Search your next little dream...">
-<div id="filters"></div>
-<div class="gallery" id="gallery"></div>
-<p id="empty" hidden>No dreams found. Try another search! 🌷</p>
-<div style="background:white;padding:20px;margin:20px auto;border-radius:20px;max-width:450px">
-  <h2>🔐 Dreamsy Owner Login</h2>
-  <input id="ownerEmail" type="email" placeholder="Your email">
-  <input id="ownerPassword" type="password" placeholder="Your password">
-  <button onclick="ownerSignUp()">Create Owner Account</button>
-  <button onclick="ownerLogin()">Log In</button>
-  <button onclick="ownerLogout()">Log Out</button>
-  <hr>
-  <h2>☁️ Share Your Dream</h2>
-  <input id="picTitle" type="text" placeholder="Picture title">
-  <input id="picCategory" type="text" placeholder="Category">
-  <input id="picFile" type="file" accept="image/*">
-  <button onclick="uploadDream()">⬆️ Upload Picture</button>
-  <p id="uploadStatus"></p>
-</div>
+  <section class="hero" id="home">
+    <span class="eyebrow">☁️ Your little corner of magic ✨</span>
+    <h1>A world of <span>dreams.</span></h1>
+    <p>Discover beautiful pictures, save your favourites, and share a little kindness. Welcome to Dreamsy! 💜</p>
+    <a href="#gallerySection"><button class="primary">Explore the Gallery ✨</button></a>
+  </section>
+
+  <section id="gallerySection">
+    <div class="container">
+      <div class="section-head">
+        <h2>🦋 The Dream Gallery</h2>
+        <p>A collection of pictures to brighten your day.</p>
+      </div>
+
+      <div class="tools">
+        <input class="field" id="searchInput" type="search" placeholder="🔎 Search pictures by title..." aria-label="Search pictures">
+        <select class="field" id="categorySelect" aria-label="Filter by category">
+          <option value="all">All categories</option>
+        </select>
+      </div>
+
+      <div class="chips" id="categoryChips" aria-label="Picture categories">
+        <button class="chip active" data-category="all">All pictures</button>
+      </div>
+
+      <p id="galleryStatus" class="status" role="status">Loading your dreamy gallery… 🌙</p>
+      <div id="gallery" class="gallery"></div>
+    </div>
+  </section>
+
+  <section id="favouritesSection">
+    <div class="container">
+      <div class="section-head">
+        <h2>💜 Your Favourites</h2>
+        <p>Your saved pictures, kept on this device.</p>
+      </div>
+      <p id="favouritesStatus" class="status">Tap the heart on any picture to save it here.</p>
+      <div id="favouritesGallery" class="gallery"></div>
+    </div>
+  </section>
+
+  <section id="feedbackSection">
+    <div class="container">
+      <div class="section-head">
+        <h2>💌 Leave Some Love</h2>
+        <p>Have an idea or something kind to share? We'd love to hear it.</p>
+      </div>
+      <form id="feedbackForm" class="form-card">
+        <label for="feedbackName">Your name (optional)</label>
+        <input class="field" id="feedbackName" maxlength="60" autocomplete="name" placeholder="What should we call you?">
+
+        <label for="feedbackMessage">Your feedback</label>
+        <textarea class="field" id="feedbackMessage" maxlength="1500" required placeholder="Share your thoughts with us…"></textarea>
+
+        <button class="primary" id="feedbackSubmit" type="submit">Send Feedback 💜</button>
+        <p id="formStatus" role="status" aria-live="polite"></p>
+        <p class="form-note">Please don't include passwords, addresses, phone numbers or other private information.</p>
+      </form>
+    </div>
+  </section>
 </main>
-<footer>Made with 💜 and a little bit of magic ✨</footer>
-<script>
 
-const dreams=[
-["Lavender Dreams","Aesthetic","https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=700&q=80","Soft colours, peaceful thoughts."],
-["Moonlight Magic","Wallpapers","https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?auto=format&fit=crop&w=700&q=80","Dream beneath the stars."],
-["Creative Corner","Art","https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=700&q=80","Your imagination matters."],
-["Study Sparkle","Study Inspiration","https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=700&q=80","One page at a time."],
-["Butterfly Wishes","Cute Pictures","https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=700&q=80","Let your dreams fly."],
-["Little Blossoms","Nature","https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=700&q=80","Grow at your own pace."],
-["Anime Daydream","Anime","https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=700&q=80","A world of imagination."],
-["Gentle Reminder","Quotes","https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=700&q=80","Small steps still count."]
-];
+<footer>
+  <p>🌙 Made with love and a little bit of magic.</p>
+  <p>© <span id="year"></span> Dreamsy · Keep dreaming ✨</p>
+</footer>
 
-const cats=["All","Aesthetic","Art","Study Inspiration","Wallpapers","Cute Pictures","Nature","Anime","Quotes"];
-let active="All";
-const filters=document.getElementById("filters");
-cats.forEach(c=>{
- const b=document.createElement("button");
- b.textContent=c;
- if(c===active)b.className="active";
- b.onclick=()=>{active=c;[...filters.children].forEach(x=>x.className=x.textContent===c?"active":"");render()};
- filters.appendChild(b);
-});
- function openDream(index) {
-  const d = dreams[index];
-  if (!d) return;
-
-  const old = document.getElementById("dream-modal");
-  if (old) old.remove();
-
-  const modal = document.createElement("div");
-  modal.id = "dream-modal";
-  modal.style.cssText =
-    "position:fixed;inset:0;background:#171329dd;z-index:9999;display:flex;align-items:center;justify-content:center;padding:18px;overflow:auto";
-
-  modal.innerHTML = `
-    <div style="background:#fff7ff;color:#332544;padding:20px;border-radius:20px;max-width:420px;width:100%;text-align:center">
-      <button id="dream-close" style="float:right;font-size:20px">✖</button>
-      <img src="${d[2]}" alt="${d[0]}" style="width:100%;max-height:300px;object-fit:contain;border-radius:14px">
-      <h2>${d[0]}</h2>
-      <p>${d[3]}</p>
-      <p>Category: ${d[1]}</p>
-      <a href="${d[2]}" download style="display:inline-block;background:#b69bdf;color:#fff;padding:12px 20px;border-radius:12px;text-decoration:none">⬇️ Download Picture</a>
-    </div>`;
-
-  document.body.appendChild(modal);
-
-  document.getElementById("dream-close").onclick =
-    () => modal.remove();
-
-    modal.onclick = e => {
-    if (e.target === modal) modal.remove();
-  };
-}
-window.openDream = openDream;
-function render(){
- const q=document.getElementById("search").value.toLowerCase();
- const shown=dreams.filter(d=>(active==="All"||d[1]===active)&&d.join(" ").toLowerCase().includes(q));
- 
-
-document.getElementById("gallery").innerHTML=shown.map(d=>`<article class="card" onclick="openDream(${dreams.indexOf(d)})" style="cursor:pointer"><img src="${d[2]}" alt="${d[0]}" style="width:100%;height:180px;object-fit:cover;border-radius:15px"><h3>${d[0]}</h3><p>${d[3]}</p><small>${d[1]}</small></article>`).join("");
-
- document.getElementById("empty").hidden=shown.length>0;
-}
-document.getElementById("search").addEventListener("input",render);
-render();
-</script>
+<div class="modal" id="pictureModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-box">
+    <div class="modal-top">
+      <h2 id="modalTitle">Picture details</h2>
+      <button class="close-btn" id="closeModal" type="button">Close ✕</button>
+    </div>
+    <img id="largePicture" alt="">
+    <p id="modalDescription"></p>
+    <h3>💬 Picture comments</h3>
+    <div id="commentList" class="comment-list"></div>
+    <p id="commentStatus" role="status"></p>
+    <form id="commentForm">
+      <label for="commentName">Your name (optional)</label>
+      <input class="field" id="commentName" maxlength="60" placeholder="A nickname">
+      <label for="commentText">Your comment</label>
+      <textarea class="field" id="commentText" maxlength="1000" required placeholder="Write a kind comment…"></textarea>
+      <button class="primary" type="submit">Post Comment 💬</button>
+    </form>
+    <p class="form-note">Comments are public. Don't share personal information.</p>
+  </div>
+</div>
 
 <script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-  const supabase = createClient(
-    'https://feeqhbrpjghgxkjurpfg.supabase.co',
-    'sb_publishable_ep5Ucf0rziABtsh9ulyJKQ_hZ9zbV41',
-  );
+const SUPABASE_URL = 'https://feeqhbrpjghgxkjurpfg.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ep5Ucf0rziABtsh9ulyJKQ_hZ9zbV41';
+const BUCKET = 'dreamsy-pictures';
 
-  window.dreamsySupabase = supabase;
+// These two tables must exist, with suitable RLS policies, for feedback
+// and comments to be saved. Instructions are provided after this code.
+const FEEDBACK_TABLE = 'dreamsy_feedback';
+const COMMENTS_TABLE = 'dreamsy_comments';
 
-  console.log('Dreamsy connected!');
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+const $ = id => document.getElementById(id);
+
+let pictures = [];
+let selectedCategory = 'all';
+let selectedPicture = null;
+let signedUrlCache = new Map();
+let feedbackBusy = false;
+let commentBusy = false;
+
+const FAV_KEY = 'dreamsy_favourites_v1';
+function getFavourites() {
+  try {
+    const value = JSON.parse(localStorage.getItem(FAV_KEY) || '[]');
+    return Array.isArray(value) ? value.map(String) : [];
+  } catch {
+    return [];
+  }
+}
+function saveFavourites(ids) {
+  localStorage.setItem(FAV_KEY, JSON.stringify(ids));
+}
+function isFavourite(id) {
+  return getFavourites().includes(String(id));
+}
+function toggleFavourite(id) {
+  const key = String(id);
+  const current = getFavourites();
+  const next = current.includes(key)
+    ? current.filter(item => item !== key)
+    : [...current, key];
+  saveFavourites(next);
+  renderGallery();
+  renderFavourites();
+}
+function escapeHTML(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;',
+    '"': '&quot;', "'": '&#39;'
+  })[ch]);
+}
+function safeImageAlt(picture) {
+  return escapeHTML(picture.title || 'Dreamsy picture');
+}
+function setStatus(element, message) {
+  element.textContent = message;
+}
+function formatDate(value) {
+  if (!value) return '';
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? '' : date.toLocaleDateString();
+}
+
+async function getImageUrl(path) {
+  if (!path) return '';
+  const cached = signedUrlCache.get(path);
+  if (cached && cached.expires > Date.now()) return cached.url;
+
+  const { data, error } = await supabase.storage
+    .from(BUCKET)
+    .createSignedUrl(path, 3600);
+
+  if (error) {
+    console.error('Could not create image URL:', error.message);
+    return '';
+  }
+  signedUrlCache.set(path, { url: data.signedUrl, expires: Date.now() + 3500000 });
+  return data.signedUrl;
+}
+
+async function loadPictures() {
+  setStatus($('galleryStatus'), 'Loading your dreamy gallery… 🌙');
+  $('gallery').replaceChildren();
+
+  const { data, error } = await supabase
+    .from('dreamsy_pictures')
+    .select('id, title, category, description, file_path, created_at')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Gallery error:', error.message);
+    setStatus($('galleryStatus'),
+      'We could not load the gallery. Please check the Supabase table permissions and try again.');
+    return;
+  }
+
+  pictures = data || [];
+  const categories = [...new Set(
+    pictures.map(p => String(p.category || '').trim()).filter(Boolean)
+  )].sort((a, b) => a.localeCompare(b));
+
+  $('categorySelect').replaceChildren();
+  const allOption = document.createElement('option');
+  allOption.value = 'all';
+  allOption.textContent = 'All categories';
+  $('categorySelect').append(allOption);
+
+  $('categoryChips').replaceChildren();
+  addCategoryChip('all', 'All pictures', true);
+
+  categories.forEach(category => {
+    const option = document.createElement('option');
+    option.value = category;
+    option.textContent = category;
+    $('categorySelect').append(option);
+    addCategoryChip(category, category, false);
+  });
+
+  renderGallery();
+  renderFavourites();
+
+  if (pictures.length === 0) {
+    setStatus($('galleryStatus'), 'No pictures yet. Check back soon for something magical! ✨');
+  } else {
+    $('galleryStatus').hidden = true;
+  }
+}
+
+function addCategoryChip(category, label, active) {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'chip' + (active ? ' active' : '');
+  button.dataset.category = category;
+  button.textContent = label;
+  $('categoryChips').append(button);
+}
+
+function getFilteredPictures(list = pictures) {
+  const term = $('searchInput').value.trim().toLocaleLowerCase();
+  return list.filter(picture => {
+    const categoryMatches = selectedCategory === 'all' ||
+      String(picture.category || '').toLocaleLowerCase() === selectedCategory.toLocaleLowerCase();
+    const text = [picture.title, picture.category, picture.description]
+      .map(v => String(v || '').toLocaleLowerCase()).join(' ');
+    return categoryMatches && text.includes(term);
+  });
+}
+
+function createPictureCard(picture) {
+  const article = document.createElement('article');
+  article.className = 'picture-card';
+
+  const image = document.createElement('img');
+  image.alt = picture.title || 'Dreamsy picture';
+  image.loading = 'lazy';
+  image.src = '';
+  image.style.cursor = 'wait';
+
+  const content = document.createElement('div');
+  content.className = 'card-content';
+
+  const title = document.createElement('h3');
+  title.textContent = picture.title || 'Untitled picture';
+
+  const category = document.createElement('div');
+  category.className = 'card-meta';
+  category.textContent = picture.category || 'Dreamsy';
+
+  const description = document.createElement('p');
+  description.textContent = picture.description || 'A little moment of magic.';
+
+  const actions = document.createElement('div');
+  actions.className = 'card-actions';
+
+  const favourite = document.createElement('button');
+  favourite.type = 'button';
+  favourite.className = 'small-btn';
+  favourite.textContent = isFavourite(picture.id) ? '💜 Saved' : '♡ Favourite';
+  favourite.setAttribute('aria-pressed', String(isFavourite(picture.id)));
+  favourite.addEventListener('click', () => toggleFavourite(picture.id));
+
+  const details = document.createElement('button');
+  details.type = 'button';
+  details.className = 'small-btn';
+  details.textContent = '💬 Details & comments';
+  details.addEventListener('click', () => openPicture(picture));
+
+  actions.append(favourite, details);
+  content.append(title, category, description, actions);
+  article.append(image, content);
+
+  getImageUrl(picture.file_path).then(url => {
+    if (url) {
+      image.src = url;
+      image.style.cursor = 'zoom-in';
+      image.addEventListener('click', () => openPicture(picture));
+    } else {
+      image.alt = 'Picture could not be loaded';
+      image.style.cursor = 'default';
+    }
+  });
+
+  return article;
+}
+
+function renderGallery() {
+  const gallery = $('gallery');
+  gallery.replaceChildren();
+  const filtered = getFilteredPictures();
+  filtered.forEach(picture => gallery.append(createPictureCard(picture)));
+
+  if (filtered.length === 0) {
+    $('galleryStatus').hidden = false;
+    setStatus($('galleryStatus'),
+      pictures.length ? 'No pictures match your search. Try another word or category. 💜'
+        : 'Your gallery is waiting for its first pictures. 🌙');
+  } else {
+    $('galleryStatus').hidden = true;
+  }
+}
+
+function renderFavourites() {
+  const gallery = $('favouritesGallery');
+  gallery.replaceChildren();
+  const favs = getFavourites();
+  const saved = pictures.filter(picture => favs.includes(String(picture.id)));
+
+  if (!saved.length) {
+    setStatus($('favouritesStatus'), 'No favourites saved yet. Tap ♡ Favourite on a picture you love.');
+    return;
+  }
+  setStatus($('favouritesStatus'), `${saved.length} favourite${saved.length === 1 ? '' : 's'} saved on this device.`);
+  saved.forEach(picture => gallery.append(createPictureCard(picture)));
+}
+
+function addTextElement(parent, tag, text, className) {
+  const element = document.createElement(tag);
+  element.textContent = text;
+  if (className) element.className = className;
+  parent.append(element);
+  return element;
+}
+
+async function openPicture(picture) {
+  selectedPicture = picture;
+  $('modalTitle').textContent = picture.title || 'Picture details';
+  $('modalDescription').textContent = picture.description || '';
+  $('largePicture').alt = picture.title || 'Dreamsy picture';
+  $('largePicture').src = '';
+  $('commentList').replaceChildren();
+  $('commentText').value = '';
+  $('commentName').value = '';
+  $('commentStatus').textContent = 'Loading comments…';
+
+  const url = await getImageUrl(picture.file_path);
+  if (url) $('largePicture').src = url;
+
+  $('pictureModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  await loadComments(picture.id);
+}
+
+function closePicture() {
+  $('pictureModal').classList.remove('open');
+  document.body.style.overflow = '';
+  selectedPicture = null;
+}
+$('closeModal').addEventListener('click', closePicture);
+$('pictureModal').addEventListener('click', event => {
+  if (event.target === $('pictureModal')) closePicture();
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') closePicture();
+});
+
+async function loadComments(pictureId) {
+  $('commentList').replaceChildren();
+  const { data, error } = await supabase
+    .from(COMMENTS_TABLE)
+    .select('id, name, comment, created_at')
+    .eq('picture_id', pictureId)
+    .order('created_at', { ascending: false })
+    .limit(50);
+
+  if (error) {
+    console.error('Comment load error:', error.message);
+    setStatus($('commentStatus'),
+      'Comments are not available yet. The comments table and its read policy need to be set up.');
+    return;
+  }
+  if (!data || data.length === 0) {
+    setStatus($('commentStatus'), 'No comments yet. Be the first to leave a kind comment! ✨');
+    return;
+  }
+
+  setStatus($('commentStatus'), `${data.length} recent comment${data.length === 1 ? '' : 's'}.`);
+  data.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'comment';
+    addTextElement(card, 'strong', item.name || 'Dreamsy visitor');
+    addTextElement(card, 'p', item.comment || '');
+    if (item.created_at) {
+      addTextElement(card, 'small', formatDate(item.created_at), 'form-note');
+    }
+    $('commentList').append(card);
+  });
+}
+
+$('commentForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  if (commentBusy || !selectedPicture) return;
+
+  const comment = $('commentText').value.trim();
+  const name = $('commentName').value.trim();
+  if (!comment) {
+    setStatus($('commentStatus'), 'Please write a comment first.');
+    return;
+  }
+
+  commentBusy = true;
+  const button = $('commentForm').querySelector('button[type="submit"]');
+  button.disabled = true;
+  button.textContent = 'Posting…';
+  setStatus($('commentStatus'), 'Sending your comment…');
+
+  const { error } = await supabase.from(COMMENTS_TABLE).insert({
+    picture_id: selectedPicture.id,
+    name: name || 'Dreamsy visitor',
+    comment
+  });
+
+  commentBusy = false;
+  button.disabled = false;
+  button.textContent = 'Post Comment 💬';
+
+  if (error) {
+    console.error('Comment submit error:', error.message);
+    setStatus($('commentStatus'),
+      'Comment could not be saved. The comments table or its insert policy may not be ready.');
+    return;
+  }
+  $('commentText').value = '';
+  await loadComments(selectedPicture.id);
+});
+
+$('feedbackForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  if (feedbackBusy) return;
+
+  const message = $('feedbackMessage').value.trim();
+  const name = $('feedbackName').value.trim();
+  if (!message) {
+    setStatus($('formStatus'), 'Please write your feedback first.');
+    return;
+  }
+
+  feedbackBusy = true;
+  const button = $('feedbackSubmit');
+  button.disabled = true;
+  button.textContent = 'Sending…';
+  setStatus($('formStatus'), 'Sending your feedback…');
+
+  const { error } = await supabase.from(FEEDBACK_TABLE).insert({
+    name: name || 'Anonymous',
+    message
+  });
+
+  feedbackBusy = false;
+  button.disabled = false;
+  button.textContent = 'Send Feedback 💜';
+
+  if (error) {
+    console.error('Feedback submit error:', error.message);
+    setStatus($('formStatus'),
+      'Feedback could not be saved yet. The feedback table and its insert policy need to be set up.');
+    return;
+  }
+  $('feedbackForm').reset();
+  setStatus($('formStatus'), 'Thank you! Your feedback has been sent. 💜');
+});
+
+$('searchInput').addEventListener('input', renderGallery);
+$('categorySelect').addEventListener('change', event => {
+  selectedCategory = event.target.value;
+  updateCategoryChips();
+  renderGallery();
+});
+$('categoryChips').addEventListener('click', event => {
+  const button = event.target.closest('button[data-category]');
+  if (!button) return;
+  selectedCategory = button.dataset.category;
+  $('categorySelect').value = selectedCategory;
+  updateCategoryChips();
+  renderGallery();
+});
+function updateCategoryChips() {
+  $('categoryChips').querySelectorAll('.chip').forEach(button => {
+    const active = button.dataset.category === selectedCategory;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+}
+
+$('year').textContent = new Date().getFullYear();
+loadPictures();
 </script>
 </body>
 </html>
+
