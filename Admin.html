@@ -4,330 +4,572 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dreamsy Owner Studio 💜</title>
+<title>Dreamsy Admin</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-*{box-sizing:border-box}
-body{margin:0;padding:16px;font-family:Arial,sans-serif;color:#493466;background:linear-gradient(145deg,#f7f0ff,#e4f4ff,#fff4fa)}
-.wrap{max-width:720px;margin:24px auto}
-header{text-align:center;margin-bottom:22px}
-.moon{font-size:42px}
-h1{color:#8864bd;margin:8px}
-.panel{background:white;border:1px solid #e2d7f3;border-radius:20px;padding:20px;margin-bottom:18px;box-shadow:0 8px 25px #bba7df24}
-label{display:block;font-size:14px;font-weight:bold;margin:14px 0 7px}
-input,textarea,button{width:100%;padding:13px;border-radius:12px;font:inherit}
-input,textarea{border:1px solid #e2d7f3;background:white;color:#493466}
-textarea{resize:vertical;min-height:80px}
-button{border:0;cursor:pointer;font-weight:bold;margin-top:12px}
-.primary{background:#8864bd;color:white}
-.secondary{background:#e0f3ff;color:#315d82}
-.status,.muted{font-size:14px;line-height:1.6;overflow-wrap:anywhere}
-.muted{color:#786d89}
-.preview{width:100%;max-height:300px;object-fit:contain;background:#eee6ff;border-radius:14px;margin-top:12px}
-.list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.item{border:1px solid #e2d7f3;border-radius:14px;overflow:hidden}
-.item img{width:100%;height:160px;object-fit:cover;display:block}
-.item-body{padding:12px}
-.item h3{margin:0 0 6px;overflow-wrap:anywhere}
-.item p{font-size:13px;overflow-wrap:anywhere;color:#786d89}
-[hidden]{display:none!important}
-@media(max-width:450px){.panel{padding:15px}.item img{height:125px}}
-</style>
-</head>
-<body>
-<div class="wrap">
-<header>
-<div class="moon">🌙</div>
-<h1>Dreamsy Studio</h1>
-<p class="muted">Your magical picture studio ✨</p>
-</header>
+* { box-sizing: border-box; }
 
-<section class="panel" id="loginPanel">
-<h2>🔐 Owner Login</h2>
-<p class="muted">Sign in with your existing owner account.</p>
-<form id="loginForm">
-<label for="email">Owner email</label>
-<input id="email" type="email" autocomplete="username" required>
-<label for="password">Password</label>
-<input id="password" type="password" autocomplete="current-password" required>
-<button class="primary" id="loginButton" type="submit">Log In 💜</button>
-</form>
-<p id="loginStatus" class="status" role="status"></p>
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  color: #382f55;
+  background: linear-gradient(135deg, #f0e8ff, #e4f5ff);
+}
+
+main {
+  max-width: 900px;
+  margin: auto;
+}
+
+header {
+  text-align: center;
+  padding: 20px;
+}
+
+h1 { color: #8971d8; }
+
+.panel {
+  background: white;
+  border-radius: 18px;
+  padding: 20px;
+  margin: 18px 0;
+  box-shadow: 0 5px 20px #0000000d;
+}
+
+label {
+  display: block;
+  margin: 12px 0 6px;
+  font-weight: bold;
+}
+
+input, select, textarea, button {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 8px;
+  border: 1px solid #ddd5f0;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+textarea { min-height: 80px; }
+
+button {
+  background: #c6b5ff;
+  color: #30234e;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.hidden { display: none !important; }
+
+.status {
+  padding: 12px;
+  border-radius: 10px;
+  margin: 12px 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.error { background: #ffe9ee; color: #982040; }
+.success { background: #e4f8ec; color: #17623b; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.picture {
+  background: white;
+  border: 1px solid #e5ddf5;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.picture img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.picture-body { padding: 12px; }
+.picture h3 { overflow-wrap: anywhere; }
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+<section id="login" class="panel">
+  <h2>🔐 Admin Login</h2>
+
+  <form id="loginForm">
+    <label for="email">Email</label>
+    <input id="email" type="email" required>
+
+    <label for="password">Password</label>
+    <input id="password" type="password" required>
+
+    <button id="loginBtn" type="submit">
+      Sign In
+    </button>
+  </form>
+
+  <div id="loginMsg"></div>
 </section>
 
-<div id="dashboard" hidden>
-<section class="panel">
-<h2>✨ Your Studio</h2>
-<p id="ownerInfo" class="muted"></p>
-<button class="secondary" id="refreshButton" type="button">↻ Refresh Pictures</button>
-<button class="secondary" id="logoutButton" type="button">Log Out</button>
-<p id="pageStatus" class="status" role="status"></p>
+<section id="dashboard" class="hidden">
+
+  <div class="panel">
+    <div class="top">
+      <div>
+        <h2>✨ Admin Dashboard</h2>
+        <p id="account"></p>
+      </div>
+      <button id="logout" type="button">Log Out</button>
+    </div>
+    <div id="mainMsg"></div>
+  </div>
+
+  <div class="panel">
+    <h2>🖼️ Upload a Picture</h2>
+
+    <form id="uploadForm">
+      <label for="file">Choose Picture</label>
+      <input
+        id="file"
+        type="file"
+        accept="image/jpeg,image/png,image/webp,image/gif"
+        required
+      >
+
+      <label for="title">Picture Title</label>
+      <input id="title" maxlength="120" required>
+
+      <label for="category">Category</label>
+      <select id="category">
+        <option>Art</option>
+        <option>Anime</option>
+        <option>Nature</option>
+        <option>Aesthetic</option>
+        <option>Photography</option>
+        <option>Other</option>
+      </select>
+
+      <label for="description">Description</label>
+      <textarea id="description" maxlength="1000"></textarea>
+
+      <button id="uploadBtn" type="submit">
+        Upload Picture ✨
+      </button>
+    </form>
+
+    <div id="uploadMsg"></div>
+  </div>
+
+  <div class="panel">
+    <div class="top">
+      <h2>🌙 Your Pictures</h2>
+      <button id="refresh" type="button">Refresh</button>
+    </div>
+
+    <div id="galleryMsg"></div>
+    <div id="grid" class="grid"></div>
+  </div>
+
 </section>
+</main>
 
-<section class="panel">
-<h2>🖼️ Upload a Picture</h2>
-<form id="uploadForm">
-<label for="pictureFile">Choose a picture</label>
-<input id="pictureFile" type="file" accept="image/*" required>
-<img id="preview" class="preview" alt="Picture preview" hidden>
-<label for="pictureTitle">Picture title</label>
-<input id="pictureTitle" maxlength="120" required placeholder="e.g. Moonlight Dreams">
-<label for="pictureCategory">Category</label>
-<input id="pictureCategory" maxlength="60" required placeholder="e.g. Anime, Nature, Aesthetic">
-<label for="pictureDescription">Description (optional)</label>
-<textarea id="pictureDescription" maxlength="1000" placeholder="Write a description"></textarea>
-<button class="primary" id="uploadButton" type="submit">⬆️ Upload Picture</button>
-</form>
-<p class="muted">Images up to 10 MB.</p>
-<p id="uploadStatus" class="status" role="status" aria-live="polite"></p>
-</section>
+<script>
+"use strict";
 
-<section class="panel">
-<h2>🌷 Your Uploaded Pictures</h2>
-<div id="pictureList" class="list"></div>
-<p id="listStatus" class="status" role="status"></p>
-</section>
-</div>
-</div>
+const SUPABASE_URL =
+  "https://feeqhbrpjghgxkjurpfg.supabase.co";
 
-<script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const SUPABASE_KEY =
+  "sb_publishable_ep5Ucf0rziABtsh9ulyJKQ_hZ9zbV41";
 
-const supabase = createClient(
-  'https://feeqhbrpjghgxkjurpfg.supabase.co',
-  'sb_publishable_ep5Ucf0rziABtsh9ulyJKQ_hZ9zbV41'
+const BUCKET = "Dreamsy-pictures";
+const TABLE = "dreamsy_pictures";
+
+const OWNER_ID =
+  "854187f8-7d41-42a7-8fec-fd385f0b2e05";
+
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
 );
-const BUCKET = 'Dreamsy-pictures';
+
 const $ = id => document.getElementById(id);
-let currentUser = null;
-let previewUrl = null;
 
-function status(id, message, error = false) {
-  $(id).textContent = message;
-  $(id).style.color = error ? '#b42358' : '#55764c';
+function showMessage(id, message, type = "info") {
+  const element = $(id);
+  element.textContent = message;
+  element.className = "status " + type;
 }
 
-function safeFileName(name) {
-  return name.normalize('NFKD')
-    .replace(/[^a-zA-Z0-9._-]/g, '_')
-    .slice(-100) || 'picture';
+function clearMessage(id) {
+  $(id).textContent = "";
+  $(id).className = "";
 }
 
-function showDashboard(user) {
-  currentUser = user;
-  $('loginPanel').hidden = true;
-  $('dashboard').hidden = false;
-  $('ownerInfo').textContent = 'Signed in as ' + (user.email || 'owner');
-  loadPictures();
+function errorMessage(error) {
+  return error?.message || String(error);
+}
+
+function setBusy(id, busy, text) {
+  const button = $(id);
+
+  if (busy) {
+    button.dataset.oldText = button.textContent;
+    button.textContent = text;
+    button.disabled = true;
+  } else {
+    button.textContent =
+      button.dataset.oldText || button.textContent;
+    button.disabled = false;
+  }
 }
 
 function showLogin() {
-  currentUser = null;
-  $('loginPanel').hidden = false;
-  $('dashboard').hidden = true;
+  $("login").classList.remove("hidden");
+  $("dashboard").classList.add("hidden");
+  $("grid").replaceChildren();
 }
 
-$('loginForm').addEventListener('submit', async event => {
-  event.preventDefault();
-  const button = $('loginButton');
-  button.disabled = true;
-  status('loginStatus', 'Logging in...');
+function showDashboard(user) {
+  $("login").classList.add("hidden");
+  $("dashboard").classList.remove("hidden");
 
-  try {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: $('email').value.trim(),
-      password: $('password').value
-    });
-    if (error) throw error;
-    status('loginStatus', 'Login successful! 💜');
-    showDashboard(data.user);
-  } catch (error) {
-    status('loginStatus', 'Login failed: ' + error.message, true);
-  } finally {
-    button.disabled = false;
+  $("account").textContent =
+    "Signed in as " + (user.email || "admin");
+}
+
+async function checkOwner() {
+  const { data, error } = await db.auth.getUser();
+
+  if (error) throw error;
+
+  if (!data.user) {
+    throw new Error("Please sign in again.");
   }
-});
 
-$('logoutButton').addEventListener('click', async () => {
-  const button = $('logoutButton');
-  button.disabled = true;
-  try {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
+  if (data.user.id !== OWNER_ID) {
+    await db.auth.signOut();
     showLogin();
-    status('loginStatus', 'You have logged out.');
-  } catch (error) {
-    status('pageStatus', 'Logout failed: ' + error.message, true);
-  } finally {
-    button.disabled = false;
-  }
-});
 
-$('pictureFile').addEventListener('change', () => {
-  const file = $('pictureFile').files[0];
-  $('preview').hidden = true;
-  if (previewUrl) URL.revokeObjectURL(previewUrl);
-  previewUrl = null;
-
-  if (!file) return;
-  if (!file.type.startsWith('image/') || file.size > 10 * 1024 * 1024) {
-    $('pictureFile').value = '';
-    status('uploadStatus', 'Choose an image no larger than 10 MB.', true);
-    return;
+    throw new Error(
+      "This account is not authorised for Dreamsy Admin."
+    );
   }
 
-  previewUrl = URL.createObjectURL(file);
-  $('preview').src = previewUrl;
-  $('preview').hidden = false;
-  status('uploadStatus', 'Image ready! ✨');
-});
+  return data.user;
+}
+</script>
 
-$('uploadForm').addEventListener('submit', async event => {
+.top button { width: auto; }
+
+@media (max-width: 500px) {
+  body { padding: 10px; }
+  .panel { padding: 15px; }
+}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <h1>☁️ Dreamsy ✨</h1>
+  <p>Your private picture studio 💜</p>
+</header>
+
+$("loginForm").addEventListener("submit", async event => {
   event.preventDefault();
-  if (!currentUser) {
-    status('uploadStatus', 'Please log in again.', true);
-    return;
-  }
 
-  const file = $('pictureFile').files[0];
-  const title = $('pictureTitle').value.trim();
-  const category = $('pictureCategory').value.trim();
-  const description = $('pictureDescription').value.trim();
-
-  if (!file || !title || !category) {
-    status('uploadStatus', 'Choose an image and enter a title and category.', true);
-    return;
-  }
-  if (!file.type.startsWith('image/') || file.size > 10 * 1024 * 1024) {
-    status('uploadStatus', 'Choose an image no larger than 10 MB.', true);
-    return;
-  }
-
-  const button = $('uploadButton');
-  button.disabled = true;
-  status('uploadStatus', 'Uploading your picture...');
-
-  let path = null;
-  let storageUploaded = false;
+  clearMessage("loginMsg");
+  setBusy("loginBtn", true, "Signing in...");
 
   try {
-    path = `${currentUser.id}/${Date.now()}-${safeFileName(file.name)}`;
-
-    const { error: storageError } = await supabase.storage
-      .from(BUCKET)
-      .upload(path, file, {
-        upsert: false,
-        contentType: file.type,
-        cacheControl: '3600'
+    const { data, error } =
+      await db.auth.signInWithPassword({
+        email: $("email").value.trim(),
+        password: $("password").value
       });
-    if (storageError) throw storageError;
-    storageUploaded = true;
 
-    const { error: dbError } = await supabase
-      .from('dreamsy_pictures')
-      .insert({
-        title,
-        category,
-        description,
-        file_path: path,
-        uploaded_by: currentUser.id
-      });
-    if (dbError) throw dbError;
-
-    $('uploadForm').reset();
-    $('preview').hidden = true;
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
-    previewUrl = null;
-    status('uploadStatus', 'Picture uploaded successfully! 🌙💜');
-    await loadPictures();
-  } catch (error) {
-    if (storageUploaded && path) {
-      const { error: cleanupError } = await supabase.storage
-        .from(BUCKET).remove([path]);
-      if (cleanupError) {
-        status('uploadStatus',
-          'Upload failed: ' + error.message +
-          '. Cleanup also failed: ' + cleanupError.message, true);
-      } else {
-        status('uploadStatus', 'Upload failed: ' + error.message, true);
-      }
-    } else {
-      status('uploadStatus', 'Upload failed: ' + error.message, true);
+    if (error) {
+      throw new Error("Login failed: " + errorMessage(error));
     }
+
+    if (!data.user || data.user.id !== OWNER_ID) {
+      await db.auth.signOut();
+      throw new Error("This account is not authorised.");
+    }
+
+    showDashboard(data.user);
+    await loadPictures();
+
+  } catch (error) {
+    showMessage("loginMsg", errorMessage(error), "error");
   } finally {
-    button.disabled = false;
+    setBusy("loginBtn", false);
+  }
+});
+
+$("logout").addEventListener("click", async () => {
+  const { error } = await db.auth.signOut();
+
+  showLogin();
+
+  if (error) {
+    showMessage("loginMsg", errorMessage(error), "error");
+  }
+});
+
+function safeFileName(name) {
+  return name
+    .replace(/[^a-zA-Z0-9._-]+/g, "-")
+    .slice(-100) || "image";
+}
+
+$("uploadForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  clearMessage("uploadMsg");
+  setBusy("uploadBtn", true, "Uploading...");
+
+  try {
+    const user = await checkOwner();
+    const file = $("file").files[0];
+    const title = $("title").value.trim();
+
+    if (!file) {
+      throw new Error("Please choose a picture.");
+    }
+
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "image/gif"
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      throw new Error("Choose a JPG, PNG, WEBP or GIF image.");
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      throw new Error("Your image must be 10 MB or smaller.");
+    }
+
+    if (!title) {
+      throw new Error("Please enter a picture title.");
+    }
+
+    const filePath =
+      user.id + "/" + Date.now() + "-" +
+      safeFileName(file.name);
+
+    const { error: uploadError } =
+      await db.storage.from(BUCKET).upload(
+        filePath,
+        file,
+        {
+          upsert: false,
+          contentType: file.type
+        }
+      );
+
+    if (uploadError) {
+      throw new Error(
+        "STORAGE UPLOAD FAILED: " +
+        errorMessage(uploadError) +
+        "\nCheck the Storage INSERT policy and bucket name."
+      );
+    }
+
+    const { error: databaseError } =
+      await db.from(TABLE).insert({
+        title: title,
+        category: $("category").value,
+        description: $("description").value.trim(),
+        file_path: filePath,
+        uploaded_by: user.id
+      });
+
+    if (databaseError) {
+      throw new Error(
+        "DATABASE SAVE FAILED: " +
+        errorMessage(databaseError) +
+        "\nCheck the database INSERT policy."
+      );
+    }
+
+    showMessage(
+      "uploadMsg",
+      "Picture uploaded successfully! ✨",
+      "success"
+    );
+
+    $("uploadForm").reset();
+    await loadPictures();
+
+  } catch (error) {
+    showMessage("uploadMsg", errorMessage(error), "error");
+  } finally {
+    setBusy("uploadBtn", false);
   }
 });
 
 async function loadPictures() {
-  if (!currentUser) return;
-  const list = $('pictureList');
-  list.replaceChildren();
-  status('listStatus', 'Loading pictures...');
+  clearMessage("galleryMsg");
+  $("grid").replaceChildren();
 
   try {
-    const { data, error } = await supabase
-      .from('dreamsy_pictures')
-      .select('id,title,category,description,file_path,created_at')
-      .order('created_at', { ascending: false });
-    if (error) throw error;
+    const user = await checkOwner();
 
-    if (!data || data.length === 0) {
-      status('listStatus', 'No pictures yet. Upload your first one! 💜');
+    const { data: pictures, error } = await db
+      .from(TABLE)
+      .select("id,title,category,description,file_path,uploaded_by,created_at")
+      .eq("uploaded_by", user.id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      throw new Error("DATABASE LOAD FAILED: " + errorMessage(error));
+    }
+
+    if (!pictures || pictures.length === 0) {
+      showMessage("galleryMsg", "No pictures yet. Upload your first one! ✨");
       return;
     }
 
-    let displayed = 0;
-    for (const picture of data) {
-      const { data: signed, error: signedError } = await supabase.storage
-        .from(BUCKET).createSignedUrl(picture.file_path, 3600);
-      if (signedError || !signed?.signedUrl) continue;
+    for (const picture of pictures) {
+      const card = document.createElement("article");
+      card.className = "picture";
 
-      const card = document.createElement('article');
-      card.className = 'item';
-      const image = document.createElement('img');
-      image.src = signed.signedUrl;
-      image.alt = picture.title || 'Uploaded picture';
-      image.loading = 'lazy';
+      const image = document.createElement("img");
+      image.alt = picture.title || "Dreamsy picture";
+      image.loading = "lazy";
 
-      const body = document.createElement('div');
-      body.className = 'item-body';
-      const heading = document.createElement('h3');
-      heading.textContent = picture.title || 'Untitled';
-      const cat = document.createElement('p');
-      cat.textContent = 'Category: ' + (picture.category || 'Uncategorised');
-      const desc = document.createElement('p');
-      desc.textContent = picture.description || '';
+      const body = document.createElement("div");
+      body.className = "picture-body";
 
-      body.append(heading, cat, desc);
+      const title = document.createElement("h3");
+      title.textContent = picture.title || "Untitled";
+
+      const category = document.createElement("p");
+      category.textContent = picture.category || "Other";
+
+      const description = document.createElement("p");
+      description.textContent = picture.description || "";
+
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.textContent = "Delete Picture";
+
+      deleteButton.addEventListener("click", async () => {
+        if (!confirm("Delete this picture permanently?")) return;
+
+        deleteButton.disabled = true;
+
+        try {
+          const owner = await checkOwner();
+
+          if (picture.uploaded_by !== owner.id) {
+            throw new Error("You cannot delete another user's picture.");
+          }
+
+          const { error: deleteError } = await db
+            .from(TABLE)
+            .delete()
+            .eq("id", picture.id)
+            .eq("uploaded_by", owner.id);
+
+          if (deleteError) {
+            throw new Error("DATABASE DELETE FAILED: " + errorMessage(deleteError));
+          }
+
+          const { error: storageError } = await db
+            .storage
+            .from(BUCKET)
+            .remove([picture.file_path]);
+
+          if (storageError) {
+            showMessage(
+              "mainMsg",
+              "The database record was deleted, but the image file could not be deleted: " +
+              errorMessage(storageError),
+              "error"
+            );
+          }
+
+          await loadPictures();
+
+        } catch (error) {
+          showMessage("mainMsg", errorMessage(error), "error");
+          deleteButton.disabled = false;
+        }
+      });
+
+      const { data: signedData, error: signedError } = await db
+        .storage
+        .from(BUCKET)
+        .createSignedUrl(picture.file_path, 3600);
+
+      if (signedError || !signedData?.signedUrl) {
+        image.alt = "Preview unavailable";
+      } else {
+        image.src = signedData.signedUrl;
+      }
+
+      body.append(title, category, description, deleteButton);
       card.append(image, body);
-      list.append(card);
-      displayed++;
+      $("grid").append(card);
     }
 
-    status('listStatus', displayed
-      ? `Showing ${displayed} picture(s). 💜`
-      : 'Pictures were found, but signed URLs failed. Check Storage permissions.',
-      displayed === 0);
+    showMessage(
+      "galleryMsg",
+      pictures.length + " picture(s) loaded! 💜",
+      "success"
+    );
+
   } catch (error) {
-    status('listStatus', 'Could not load pictures: ' + error.message, true);
+    showMessage("galleryMsg", errorMessage(error), "error");
   }
 }
 
-$('refreshButton').addEventListener('click', loadPictures);
+$("refresh").addEventListener("click", loadPictures);
 
-async function checkSession() {
+(async function startAdmin() {
   try {
-    const { data, error } = await supabase.auth.getSession();
+    const { data, error } = await db.auth.getSession();
+
     if (error) throw error;
-    if (data.session?.user) showDashboard(data.session.user);
-    else showLogin();
+
+    if (data.session?.user) {
+      if (data.session.user.id === OWNER_ID) {
+        showDashboard(data.session.user);
+        await loadPictures();
+      } else {
+        await db.auth.signOut();
+        showLogin();
+        showMessage(
+          "loginMsg",
+          "Please sign in with the authorised admin account.",
+          "error"
+        );
+      }
+    } else {
+      showLogin();
+    }
   } catch (error) {
     showLogin();
-    status('loginStatus', 'Session check failed: ' + error.message, true);
+    showMessage("loginMsg", errorMessage(error), "error");
   }
-}
-
-checkSession();
+})();
 </script>
 </body>
 </html>
